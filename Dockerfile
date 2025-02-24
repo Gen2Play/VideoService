@@ -14,4 +14,4 @@ RUN chmod +x ./mvnw
 RUN ./mvnw clean package -DskipTests
 
 # Chạy ứng dụng khi container khởi động
-CMD ["java", "-jar", "target/VideoService-3.4.2.jar"]
+CMD ["java", "-jar", "target/VideoService-3.4.3.jar"]
