@@ -30,6 +30,9 @@ spring:
         max-attempts: 5
         initial-interval: 2000
 
+server:
+  port: 8083
+
 springdoc:
   swagger-ui:
     path: /swagger-ui.html
