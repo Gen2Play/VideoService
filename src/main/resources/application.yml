@@ -1,0 +1,44 @@
+spring:
+  application:
+    name: VideoService
+
+  datasource:
+    url: ${DATABASE_URL}
+    username: ${DATABASE_USER}
+    password: ${DATABASE_PASSWORD}
+    driver-class-name: org.postgresql.Driver
+
+  jpa:
+    open-in-view: false
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+    hibernate:
+      ddl-auto: update
+
+  servlet:
+    multipart:
+      enabled: true
+      max-file-size: 500MB
+      max-request-size: 500MB
+  
+  cloud:
+    config:
+      uri: ${CONFIG_SERVICE_URI}
+      fail-fast: true
+      retry:
+        max-attempts: 5
+        initial-interval: 2000
+
+springdoc:
+  swagger-ui:
+    path: /swagger-ui.html
+    operationsSorter: alpha
+    tagsSorter: alpha
+
+eureka:
+  client:
+    serviceUrl:
+      defaultZone: https://discovery.vothanhtuyen.id.vn/eureka/
+    registerWithEureka: true
+    fetchRegistry: true
