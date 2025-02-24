@@ -9,20 +9,22 @@ import io.github.cdimascio.dotenv.Dotenv;
 
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
+
 import java.net.URLEncoder;
 import java.io.UnsupportedEncodingException;
 
 import java.io.IOException;
 import java.util.Map;
 
+import com.Gen2Play.VideoService.configuration.EnvConfig;
+
 @Service
 public class CloudinaryService {
-private final Cloudinary cloudinary;
-    Dotenv dotenv = Dotenv.load();
 
-    private String cloudName = dotenv.get("CLOUDINARY_CLOUD_NAME");
-    private String apiKey = dotenv.get("CLOUDINARY_API_KEY");
-    private String apiSecret = dotenv.get("CLOUDINARY_API_SECRET");
+    private final Cloudinary cloudinary;
+    private final String cloudName = EnvConfig.getEnv("CLOUDINARY_CLOUD_NAME");
+    private final String apiKey = EnvConfig.getEnv("CLOUDINARY_API_KEY");
+    private final String apiSecret = EnvConfig.getEnv("CLOUDINARY_API_SECRET");
 
     // Lấy thông tin Cloudinary từ application.properties
     public CloudinaryService() {
@@ -35,16 +37,16 @@ private final Cloudinary cloudinary;
     }
 
     //upload video to Cloudinary
-    @SuppressWarnings({ "rawtypes"})
+    @SuppressWarnings({"rawtypes"})
     public CloudinaryUploadResponse uploadVideo(MultipartFile videoFile) {
         CloudinaryUploadResponse result = new CloudinaryUploadResponse();
         try {
             // Upload video lên Cloudinary
             Map uploadResult = cloudinary.uploader().upload(videoFile.getBytes(),
                     ObjectUtils.asMap(
-                            "resource_type", "video",  // Chỉ định là video
+                            "resource_type", "video", // Chỉ định là video
                             "folder", "uploaded_videos" // Lưu vào thư mục "uploaded_videos"
-                            ));
+                    ));
             // Lấy các tag liên quan đến nội dung video
             // TODO: find ai to auto-tags
             // TODO: GET FPS
@@ -63,9 +65,9 @@ private final Cloudinary cloudinary;
             result.setSourceLink(sourceLink);
             result.setResolution(width + "x" + height);
             result.setViewLink(viewLink);
-            if(MediaTypeEnum.isValidFormat(videoFormat)){
+            if (MediaTypeEnum.isValidFormat(videoFormat)) {
                 result.setFormat(MediaTypeEnum.valueOf(videoFormat.toUpperCase()));
-            }else{
+            } else {
                 result.setFormat(MediaTypeEnum.OTHER);
             }
             //return result
@@ -74,8 +76,6 @@ private final Cloudinary cloudinary;
             throw new RuntimeException("Error uploading video: " + e.getMessage());
         }
     }
-    
-
 
     private String getCloudinaryPlayerUrl(String mp4Url, String format) throws UnsupportedEncodingException {
         // Sử dụng regex để lấy public_id từ URL mp4
